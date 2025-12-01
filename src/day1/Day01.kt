@@ -1,7 +1,24 @@
+package day1
+
+import kotlinx.benchmark.Benchmark
+import kotlinx.benchmark.Scope
+import kotlinx.benchmark.Setup
+import kotlinx.benchmark.State
+import println
+import readInput
 import kotlin.math.abs
 
-fun main() {
-    fun part1(input: List<String>): Int {
+@State(Scope.Benchmark)
+class Day01 {
+    var input: List<String> = listOf()
+
+    @Setup
+    fun setUp() {
+        input = readInput("day1/Day01")
+    }
+
+    @Benchmark
+    fun part1(): Int {
         var dial = 50
         var countAtZero = 0
         input.forEach {
@@ -12,7 +29,8 @@ fun main() {
         return countAtZero
     }
 
-    fun part2(input: List<String>): Int {
+    @Benchmark
+    fun part2(): Int {
         var dial = 50
         var countAtZero = 0
         input.forEach {
@@ -39,18 +57,18 @@ fun main() {
         }
         return countAtZero
     }
+}
 
-    // Read the input from the `src/Day01_test.txt` file.
-    val testInput = readInput("Day01_test")
-    println("TEST INPUT")
-    part1(testInput).println()
-    part2(testInput).println()
-    check(part1(testInput) == 3)
-    check(part2(testInput) == 6)
+fun main() {
+    val day1 = Day01()
 
-    // Read the input from the `src/Day01.txt` file.
-    val input = readInput("Day01")
-    println("INPUT")
-    part1(input).println()
-    part2(input).println()
+    var input  = readInput("day1/Day01_test")
+    day1.input = input
+    day1.part1().println()
+    day1.part2().println()
+
+    input = readInput("day1/Day01")
+    day1.input = input
+    day1.part1().println()
+    day1.part2().println()
 }

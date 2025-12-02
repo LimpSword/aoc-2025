@@ -32,7 +32,7 @@ benchmark {
             outputTimeUnit = "ns"
 
             // Include allocation profiling
-            include("Day01")
+            include("Day02")
         }
     }
 }

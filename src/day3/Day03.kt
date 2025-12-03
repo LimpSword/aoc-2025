@@ -17,6 +17,7 @@ class Day03 {
         input = readInput("day3/Day03")
     }
 
+    // Non optimized
     @Benchmark
     fun part1(): Long {
         var joltageSum = 0L
@@ -39,18 +40,31 @@ class Day03 {
 
     @Benchmark
     fun part2(): Long {
+        val powers = LongArray(12) { i -> 10.0.pow(i).toLong() }
         var joltageSum = 0L
-        input.forEach { line ->
+
+        for (line in input) {
+            val chars = line.toCharArray()
+            val len = chars.size
             var currentMaxIndex = 0
-            var joltage = 0L
-            for (i in 12 downTo 1) {
-                line.substring(currentMaxIndex, line.length - (i - 1)).map { c -> c.digitToInt() }.withIndex()
-                    .maxBy { it.value }.let { (index, value) ->
-                        joltage += 10.0.pow(i - 1).toLong() * value
-                        currentMaxIndex += index + 1
+
+            for (i in 11 downTo 0) {
+                val endIndex = len - i
+                var maxValue = 0
+                var maxIndex = currentMaxIndex
+
+                for (j in currentMaxIndex until endIndex) {
+                    val digit = chars[j] - '0'
+                    if (digit > maxValue) {
+                        maxValue = digit
+                        maxIndex = j
+                        if (digit == 9) break
                     }
+                }
+
+                joltageSum += powers[i] * maxValue
+                currentMaxIndex = maxIndex + 1
             }
-            joltageSum += joltage
         }
         return joltageSum
     }

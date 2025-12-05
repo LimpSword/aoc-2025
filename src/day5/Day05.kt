@@ -18,6 +18,7 @@ class Day05 {
         inputString = readInputString("day5/Day05")
     }
 
+    // Non optimized
     @Benchmark
     fun part1(): Int {
         val lines = inputString.lines()
@@ -42,16 +43,18 @@ class Day05 {
         return freshIngredients
     }
 
+    // We could divide execution time by 4 by parsing the string manually instead of using lines
     @Benchmark
     fun part2(): Long {
         val lines = inputString.lines()
         var startChecking = false
+        var result = 0L
         val ranges = mutableListOf<LongRange>()
 
         lines.forEach { line ->
             if (line.trim().isBlank()) {
                 // Combine ranges
-                ranges.sortWith(compareBy({ it.first }, { it.last }))
+                ranges.sortWith(compareBy({ it.first }))
                 var i = 0
                 while (i < ranges.size - 1) {
                     val nextRange = ranges[i + 1]
@@ -59,25 +62,27 @@ class Day05 {
                         ranges[i] = ranges[i].first..maxOf(ranges[i].last, nextRange.last)
                         ranges.removeAt(i + 1)
                     } else {
+                        result += (ranges[i].last - ranges[i].first + 1)
                         i += 1
                     }
                 }
+                result += (ranges.last().last - ranges.last().first + 1)
 
                 startChecking = true
                 return@forEach
             }
 
             if (startChecking) {
-                return@forEach
+                return result
             } else {
-                val (start, end) = line.split("-").map { it.toLong() }
+                val dashIndex = line.indexOf('-')
+                val start = line.take(dashIndex).toLong()
+                val end = line.substring(dashIndex + 1).toLong()
                 ranges.add(start..end)
             }
         }
 
-        var rangesTotal = 0L
-        ranges.forEach { rangesTotal += (it.last - it.first + 1) }
-        return rangesTotal
+        return result
     }
 }
 

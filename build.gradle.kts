@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.12")
+    implementation("com.gurobi:gurobi:13.0.0")
 }
 
 benchmark {
